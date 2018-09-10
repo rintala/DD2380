@@ -20,7 +20,7 @@ Task: https://kth.kattis.com/problems/kth.ai.hmm1
 
 In this task you should show that you know how to calculate the probability to observe a certain emission sequence given a HMM model. You will be given the HMM model and a sequence of observations (aka emissions, events, etc) and your task is to calculate the probability for this sequence.
 
-- Using the forward algorithm or α-pass algorithm, which estimates the prob. to be in a certain state i at time t AND having observed the observation sequence up to time t (calculated using $α_{t−1}$)
+- Using the forward algorithm or α-pass algorithm, which estimates the prob. to be in a certain state i at time t AND having observed the observation sequence up to time t (calculated using α_(t−1))
 
 ## HMM2 Estimate Sequence of States
 
@@ -39,4 +39,4 @@ Task: https://kth.kattis.com/problems/kth.ai.hmm3
 In this task you should show that you know how to estimate the model parameters for an HMM. You will be given a starting guess of a HMM (transition matrix, emission matrix and initial state probability distribution) and a sequence of emissions and you should train the HMM to maximize the probability of observing the given sequence of emissions.
 
 - Combining the forward- and backward-passing algorithms: α-pass & β-pass
-- Creating di-gamma $γ_{t}(i,j)$ and gamma $γ_{t}(i)$ in order to re-estimate parameters λ = (A,B,π)  iteratively until convergence criteria is met
+- Creating di-gamma γ_t(i,j) and gamma γ_t(i) in order to re-estimate parameters λ = (A,B,π)  iteratively until convergence criteria is met
