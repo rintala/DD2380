@@ -4,7 +4,7 @@ Assignment 1 of the Artificial Intelligence course at KTH. Diving into Hidden Ma
 
 
 
-##HMM0 Next Emission Distribution
+## HMM0 Next Emission Distribution
 
 Task: https://kth.kattis.com/problems/kth.ai.hmm0
 
@@ -14,7 +14,7 @@ More specifically, given the current state probability distribution what is the 
 
 - Using given parameters λ = (A,B,π) to calculate probability for the different states after one transition
 
-##HMM1 Probability of Emission Sequence
+## HMM1 Probability of Emission Sequence
 
 Task: https://kth.kattis.com/problems/kth.ai.hmm1
 
