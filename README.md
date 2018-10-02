@@ -14,8 +14,6 @@ More specifically, given the current state probability distribution what is the 
 
 - Using given parameters λ = (A,B,π) to calculate probability for the different states after one transition
 
-## HMM1 Probability of Emission Sequence
-
 #### HMM1 Probability of Emission Sequence
 
 Task: https://kth.kattis.com/problems/kth.ai.hmm1
