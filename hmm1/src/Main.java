@@ -119,7 +119,6 @@ public class Main {
         return outputAlpha1;
     }
 
-
     public static double[][] computeOutput(double[] alpha1, double[][] seqEmissions, double[][] B, double[][] A){
         //first add alpha1 to outputMatrix
         //declare and initialize outputmatrix
@@ -148,6 +147,7 @@ public class Main {
                 for (int sumI = 0; sumI < seqEmissionsMatrix.length; sumI++) {
                     loopSum += seqEmissionsMatrix[sumI][t-1] * A[sumI][j];
                 }
+
                 //System.out.println("LoOK AT COLUMN: "+Math.round(seqEmissions[0][t]));
                 seqEmissionsMatrix[j][t] = B[j][(int)Math.round(seqEmissions[0][t])] * loopSum;
             }

@@ -3,10 +3,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.math.BigDecimal;
 
 
-
+/*
 class Matrices {
 
     private double[][] viterbi; //array2
@@ -24,6 +23,7 @@ class Matrices {
     }
     //Setters + getters. Etc.
 }
+*/
 
 
 public class Kattis {
@@ -156,8 +156,9 @@ public class Kattis {
             for (int j = 0; j < viterbiMatrix.length; j++) {
                 double maxProb = 0;
                 double theProb = 0;
-                for (int sumI = 0; sumI < viterbiMatrix.length; sumI++) {
 
+
+                for (int sumI = 0; sumI < viterbiMatrix.length; sumI++) {
                     theProb = viterbiMatrix[sumI][t - 1] * A[sumI][j] * B[j][(int)Math.round(seqEmissions[0][t])];
 
                     if(theProb > maxProb){
@@ -187,6 +188,7 @@ public class Kattis {
         int maxProbOfColROW = 0;
         int maxProbOfColCOL = 0;
 
+        //GET BACKPOINTER FOR LAST COLUMN (LAST TIMESTEP)
         for(int row=0;row<viterbi.length;row++){
             if(viterbi[row][viterbi[0].length-1]>maxProbOfCol){
                 maxProbOfCol = viterbi[row][viterbi[0].length-1];
@@ -196,7 +198,6 @@ public class Kattis {
             else{
                 //System.out.println("NO UPDATE");
             }
-
         }
 
         for(int col = viterbi[0].length-1;col>=0;col--){

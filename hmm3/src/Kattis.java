@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.lang.Math;
 
 class Matrices {
 
@@ -105,11 +107,13 @@ public class Kattis {
 
         int countMatrix = 0;
         for(int i = 0;i<inputVectors.size();i++){
+
+            //Get the content of each matrix from inputVectors parameter
             String[] matrixContent = inputVectors.get(i);
 
             int noOfRows = Integer.valueOf(matrixContent[0]);
             int noOfCols = Integer.valueOf(matrixContent[1]);
-
+            System.out.println("MATRIX ROWS AND COLS: "+noOfRows + " x "+noOfCols);
             //If last row of input i.e. emission sequence - handle differently
             if(countMatrix==3){
                 noOfRows = 1;
@@ -119,8 +123,10 @@ public class Kattis {
             //Ex.noOfRows 4 - will repeat creating theRow four times
 
             for(int iter = 0;iter<noOfRows;iter++){
+
                 int start = iter*noOfCols+2;
                 int end = iter*noOfCols+noOfCols+2;
+                //System.out.println("OUTSTARTEND: "+start + " "+end);
 
                 //If last row of input i.e. emission sequence - handle differently
                 if(countMatrix==3){
@@ -130,6 +136,7 @@ public class Kattis {
 
                     start = iter*noOfCols+1;
                     end = iter*noOfCols+noOfCols+1;
+
                 }
 
                 double[] theRow = new double[noOfCols];
@@ -146,6 +153,7 @@ public class Kattis {
                 eachMatrix[iter] = theRow;
                 //System.out.println(eachMatrix.length);
             }
+
             countMatrix++;
             theMatrices.add(eachMatrix);
 
@@ -279,7 +287,7 @@ public class Kattis {
 
     //DI-GAMMA-------------------------------------------------------------------------------------------------------
     public static void computeDiGamma(double[][] betaMatrix, double[][] seqEmissions, double[][] B, double[][] A, double [][] alphaMatrix, Matrices theMatrices){
-
+        //BAUM WELCH
         //int N = A.length;
         //int T = alphaMatrix[0].length;
 
@@ -364,6 +372,32 @@ public class Kattis {
         return (double) tmp / factor;
     }
 
+    public static double computeDistanceBetweenMatrices(double[][] A, double[][] B){
+        //distance measure of same dimensions
+        double distanceBetween = 0;
+
+        for(int i=0;i<A.length;i++){
+            for(int j=0;j<A[0].length;j++){
+                distanceBetween+= Math.pow((A[i][j] - B[i][j]), 2);
+                System.out.println(distanceBetween);
+            }
+        }
+        return Math.sqrt(distanceBetween);
+    }
+    
+
+    public static double[][] createDeepCopyOfMatrix(double[][] X){
+        double[][] copyOfX = new double[X.length][X[0].length];
+
+        for(int i = 0;i<copyOfX.length;i++){
+            copyOfX[i] = Arrays.copyOf(X[i], X[i].length);
+        }
+
+        return copyOfX;
+
+    }
+
+
     public static void main(String[] args){
         Matrices matricesInstance = new Matrices();
 
@@ -377,8 +411,20 @@ public class Kattis {
             theMatrices = createMatrices(inputV);
 
             double[][] iTransitionMatrix = theMatrices.get(0);
+            //double [][] iTransitionMatrix0 = createDeepCopyOfMatrix(iTransitionMatrix);
+            //double[][] iTransitionMatrix0 = iTransitionMatrix.clone();
+
+            double[][] iTransitionMatrixFacit = { {0.7, 0.05, 0.25}, {0.1, 0.8, 0.1}, {0.2, 0.3, 0.5}};
+            //double[][] iTransitionMatrixFacit = { {0.7, 0.05, 0.25}, {0.1, 0.8, 0.1, 0.3}, {0.2, 0.3, 0.5, 0.1}, {0.7, 0.05, 0.25, 0.2}};
+
             double[][] iEmissionMatrix = theMatrices.get(1);
+            double[][] iEmissionMatrixFacit = { {0.7, 0.2, 0.1, 0.0}, {0.1, 0.4, 0.3, 0.2}, {0.0, 0.1, 0.2, 0.7}};
+
             double[][] iInitialstateMatrix = theMatrices.get(2);
+            System.out.println("initialStateMatrix: ");
+            print2D(iInitialstateMatrix);
+            double[][] iInitialstateMatrixFacit = {{1, 0, 0}};
+
 
             //observed sequence of states
             double[][] sequenceEmissions = theMatrices.get(3);
@@ -387,7 +433,7 @@ public class Kattis {
             double[] c = new double[sequenceEmissions[0].length];
 
             int iters = 0;
-            int maxIters = 100;
+            int maxIters = 20000;
             double oldLogProb =  -999999999;
 
             double [][] alphaMatrix;
@@ -401,7 +447,12 @@ public class Kattis {
             M = iEmissionMatrix[0].length;
             T = sequenceEmissions[0].length;
 
-            while(iters<maxIters){
+            boolean done = false;
+
+            while(!done && iters<maxIters){
+                //System.out.println("\n");
+                //print2D(iInitialstateMatrix);
+                //System.out.println("\n");
 
                 //ALPHA---------------------------------------------------------------------------------------------------
                 c = computeAlpha(iInitialstateMatrix, sequenceEmissions, iEmissionMatrix, iTransitionMatrix, c, matricesInstance);
@@ -414,9 +465,12 @@ public class Kattis {
                 betaMatrix = matricesInstance.getBeta();
                 alphaMatrix = matricesInstance.getAlpha();
 
-                //diGamma------------------------------------------------------------------------------------------------
+                //gamma & diGamma------------------------------------------------------------------------------------------------
                 computeDiGamma(betaMatrix, sequenceEmissions, iEmissionMatrix, iTransitionMatrix, alphaMatrix, matricesInstance);
+
+                //N x T
                 gammaMatrix = matricesInstance.getGamma();
+                // N x N x T
                 diGammaMatrix = matricesInstance.getDiGamma();
 
 
@@ -483,13 +537,23 @@ public class Kattis {
                 logProb =-logProb;
 
                 iters++;
+                System.out.println("diff logprob: "+Math.abs(logProb-oldLogProb));
 
                 //if(iters<maxIters){
                 if(iters<maxIters && logProb > oldLogProb){
                         oldLogProb = logProb;
                 }
                 else{
+                    System.out.println("ITERATION: "+iters);
+
+                    System.out.println("DIST BETWEEN TRANSITION MATRICES: "+computeDistanceBetweenMatrices(iTransitionMatrix, iTransitionMatrixFacit));
+                    System.out.println("DIST BETWEEN EMISSION MATRICES: "+computeDistanceBetweenMatrices(iEmissionMatrix, iEmissionMatrixFacit));
+                    System.out.println("DIST BETWEEN INITIAL STATE DISTR MATRICES: "+computeDistanceBetweenMatrices(iInitialstateMatrix, iInitialstateMatrixFacit));
+                    done = true;
+                    print2D(iInitialstateMatrix);
                     lambdaOut(iTransitionMatrix, iEmissionMatrix);
+
+
                 }
 
             }

@@ -129,21 +129,22 @@ public class Main {
 
     public static float[] computeOutput(Float[][] B, float[] piA){
         float colSum;
+
         float[] outputVector = new float[B[0].length];
 
         //System.out.println("PIL"+piA.length);
         //System.out.println("B lengththt: "+ B.length);
-        for(int rowA =0;rowA<B[0].length;rowA++){
+        for(int emission =0;emission<B[0].length;emission++){
             colSum = 0;
             for(int j=0;j<piA.length;j++){
                 //System.out.println("Comp: "+piA[j]);
                 //System.out.println("COL DATA FROM B: "+B[j][rowA]);
                 //for each element in piA go through col in B and sum up each in new 4x1
-                colSum += piA[j] * B[j][rowA];
+                colSum += piA[j] * B[j][emission];
             }
 
             //System.out.println("NOW SHOULD WE SUM: "+colSum);
-            outputVector[rowA] = colSum;
+            outputVector[emission] = colSum;
         }
 
         return outputVector;

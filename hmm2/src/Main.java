@@ -80,7 +80,6 @@ public class Main {
             //If last row of input i.e. emission sequence - handle differently
             if(countMatrix==3){
                 noOfRows = 1;
-                //System.out.println("SET NO OF ROWS TO: 1");
             }
 
             double[][] eachMatrix = new double[noOfRows][noOfCols];
@@ -189,17 +188,9 @@ public class Main {
         theMatrices.set(viterbiMatrix, backptrMatrix);
     }
 
-    // rounds double to specified decimal (unlike Math.round)
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
-    }
-
     public static ArrayList<Integer> computeMostLikelySequence(double[][] viterbi, double[][] backptr){
+        //Follow backpointer to find the most probable sequence of states
+
         ArrayList<Integer> mostLikelySeq = new ArrayList<>();
         int nextState = 0;
         for(int col = viterbi[0].length-1;col>=0;col--){
@@ -284,6 +275,7 @@ public class Main {
             //3. initial state probability distribution (pi)
             //4. Then a sequence of emissions
 
+            //get the matrices from input
             double[][] transitionMatrix = theMatrices.get(0);
             double[][] emissionMatrix = theMatrices.get(1);
             double[][] initialstateMatrix = theMatrices.get(2);
@@ -299,6 +291,7 @@ public class Main {
 
             ArrayList<Integer> outputArray= computeMostLikelySequence(viterbiMatrix, backptrMatrix);
             String outputString = "";
+
             for(int i = outputArray.size()-1;i>=0;i--){
                 outputString += " "+outputArray.get(i);
             }
